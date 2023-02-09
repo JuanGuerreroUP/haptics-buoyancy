@@ -2,17 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FloatingCube : MonoBehaviour
+public class FloatingCube : AbstractFloatingObject
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
+    public override float CalcVolume(float waterLevel)
     {
-        
+        float hSub, width;
+        hSub = GetH(waterLevel);
+        width = this.transform.localScale.x;
+        return Mathf.Pow(width, 2) * hSub;
     }
+    //olozada@up.edu.mx
 }

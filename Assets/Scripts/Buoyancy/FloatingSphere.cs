@@ -7,7 +7,7 @@ public class FloatingSphere : AbstractFloatingObject
     override public float CalcVolume(float waterLevel)
     {
         float r = this.transform.localScale.x;
-        float h = this.getH(waterLevel);
+        float h = this.GetH(waterLevel);
         return ((Mathf.PI * Mathf.Pow(h, 2))/3) * ((3*r)-h);
     }
 }

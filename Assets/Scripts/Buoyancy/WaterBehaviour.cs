@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class WaterBehaviour : MonoBehaviour
 {
-    private readonly List<GameObject> inCollision = new List<GameObject>();
+    private readonly List<AbstractFloatingObject> inCollision = new List<AbstractFloatingObject>();
     private BoxCollider waterCollider;
     public float waterLevel;
 
@@ -17,21 +17,27 @@ public class WaterBehaviour : MonoBehaviour
 
     void FixedUpdate()
     {
-        foreach(GameObject gameObject in inCollision){
-            Rigidbody rb = gameObject.GetComponent<Rigidbody>();
-            if(rb != null)
-            {
-                rb.AddForce(Physics.gravity*-2f, ForceMode.Force);
-            }
+        foreach(AbstractFloatingObject gameObject in inCollision){
+            gameObject.ApplyForce(waterLevel);
         }
     }
 
-    private void OnTriggerEnter(Collider other){
-        Debug.Log("Collided!");
-        inCollision.Add(other.gameObject);
+    private void OnTriggerEnter(Collider other)
+    {
+        AbstractFloatingObject absF = other.gameObject.GetComponent<AbstractFloatingObject>();
+        if (absF != null)
+        {
+            Debug.Log(absF.gameObject.name);
+            this.inCollision.Add(absF);
+        }
     }
     private void OnTriggerExit(Collider other)
     {
-        inCollision.Remove(other.gameObject);
+        AbstractFloatingObject absF = other.gameObject.GetComponent<AbstractFloatingObject>();
+        if (absF != null)
+        {
+            Debug.Log(absF.gameObject.name);
+            inCollision.Remove(absF);
+        }
     }
 }
