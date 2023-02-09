@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class FloatingSphere : AbstractFloatingObject
 {
-    override public float CalcVolume(float waterLevel)
+    override public float GetObjVolume()
     {
         float r = this.transform.localScale.x;
-        float h = this.GetH(waterLevel);
+        float h = 0;
         return ((Mathf.PI * Mathf.Pow(h, 2))/3) * ((3*r)-h);
     }
 }

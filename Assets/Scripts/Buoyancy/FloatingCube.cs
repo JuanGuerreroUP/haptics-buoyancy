@@ -5,12 +5,11 @@ using UnityEngine;
 public class FloatingCube : AbstractFloatingObject
 {
 
-    public override float CalcVolume(float waterLevel)
+    public override float GetObjVolume()
     {
-        float hSub, width;
-        hSub = GetH(waterLevel);
+        float width;
         width = this.transform.localScale.x;
-        return Mathf.Pow(width, 2) * hSub;
+        return Mathf.Pow(width, 3) ; //g/m3
     }
     //olozada@up.edu.mx
 }
