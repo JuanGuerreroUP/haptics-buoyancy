@@ -7,14 +7,14 @@ public class FloatingCube : AbstractFloatingObject<BoxCollider> {
 
     public override float GetObjVolume()
     {
-        Vector3 size = this.GetCollider().size;
+        Vector3 size = this.transform.localScale;
         return size.x * size.y * size.z;
     }
     //olozada@up.edu.mx
 
     public override float GetDisplacedVolume()
     {
-        Vector3 size = this.GetCollider().size;
+        Vector3 size = this.transform.localScale;
         return size.x*size.z*GetH();
     }
 }
