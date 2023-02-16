@@ -40,6 +40,8 @@ public abstract class AbstractHIP : MonoBehaviour
     private Vector3 HIPCollidingPosition;
     private Vector3 objectCollidingPosition;
 
+    abstract void OnUpdate();
+
     // Called when the script instance is being loaded
     void Awake()
     {
@@ -60,65 +62,47 @@ public abstract class AbstractHIP : MonoBehaviour
         myHapticManager = GetComponent<AbstractHM>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        // get haptic device to be used
+    private void UpdateHapticDevice(){
         int hapticsFound = myHapticManager.GetHapticDevicesFound();
         hapticDevice = (hapticDevice > -1 && hapticDevice < hapticsFound) ? hapticDevice : hapticsFound - 1;
+    }
+    private boolean IsButtonPressed(int buttonID){
+        return myHapticManager.GetButtonState(hapticDevice, buttonID);
+    }
+    private Vector3 GetPosition(){
+        return myHapticManager.GetPosition(hapticDevice);
+    }
 
-        // get haptic device variables
-        position = myHapticManager.GetPosition(hapticDevice);
-        button0 = myHapticManager.GetButtonState(hapticDevice, 0);
-        button1 = myHapticManager.GetButtonState(hapticDevice, 1);
-        button2 = myHapticManager.GetButtonState(hapticDevice, 2);
-        button3 = myHapticManager.GetButtonState(hapticDevice, 3);
-
-        // update radius
-        radius = (IHIP.GetComponent<Renderer>().bounds.extents.magnitude) / 2;
-
-        // update haptic device mass
-        mass = (mass > 0) ? mass : 0.0f;
-        rigidBody.mass = mass;
-
-        // update position
-        if (isTouching)
-        {
-            IHIP.transform.position = HIPCollidingPosition;
-            transform.position = position;
-        }
-        else
-        {
-            IHIP.transform.position = position;
-            transform.position = position;
-        }
-
-        // change material color
-        if (button0)
-        {
-            material.color = Color.red;
-        }
-        else if (button1)
-        {
-            material.color = Color.blue;
-        }
-        else if (button2)
-        {
-            material.color = Color.green;
-        }
-        else if (button3)
-        {
-            material.color = Color.yellow;
-        }
-        else
-        {
-            material.color = Color.white;
-        }
-
-        // update damping factors
+    private void UpdateDampingFactors(){
         Kv = (Kv > 1.0f * myHapticManager.GetHapticDeviceInfo(hapticDevice, 6)) ? 1.0f * myHapticManager.GetHapticDeviceInfo(hapticDevice, 6) : Kv;
         Kvr = (Kvr > 1.0f * myHapticManager.GetHapticDeviceInfo(hapticDevice, 7)) ? 1.0f * myHapticManager.GetHapticDeviceInfo(hapticDevice, 7) : Kvr;
         Kvg = (Kvr > 1.0f * myHapticManager.GetHapticDeviceInfo(hapticDevice, 8)) ? 1.0f * myHapticManager.GetHapticDeviceInfo(hapticDevice, 8) : Kvg;
+    }
+    private void UpdateHapticDeviceMass(){
+        mass = (mass > 0) ? mass : 0.0f;
+        rigidBody.mass = mass;
+    }
+
+    private void UpdateRaduis(){
+        radius = (IHIP.GetComponent<Renderer>().bounds.extents.magnitude) / 2;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        UpdateHapticDevice();
+        UpdateRaduis();
+        UpdateHapticDeviceMass();
+        if (isTouching) {
+            IHIP.transform.position = HIPCollidingPosition;
+            transform.position = position;
+        }
+        else {
+            IHIP.transform.position = position;
+            transform.position = position;
+        }
+        OnUpdate();
+        UpdateDampingFactors();
     }
 
     void OnCollisionEnter(Collision collision)
