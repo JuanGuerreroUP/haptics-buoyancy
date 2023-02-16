@@ -23,7 +23,10 @@ public abstract class AbstractFloatingObject<T>: MonoBehaviour, ILiquidReactive 
     }
 
     public void FixedUpdate() {
-        this.rb.AddForce(GetNetForce());
+        if (this.transform.parent == null || !this.transform.parent.gameObject.GetComponent<HIP>())
+        {
+            this.rb.AddForce(GetNetForce());
+        }
     }
 
     public float GetH() {

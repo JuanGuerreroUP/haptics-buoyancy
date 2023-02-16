@@ -9,19 +9,14 @@ public class HIP : MonoBehaviour
     public GameObject IHIP;
 
     // get haptic device information from the haptic manager
-    private AbstractHM myHapticManager;
+    private HM myHapticManager;
 
     // haptic device number
     public int hapticDevice;
     // haptic device variables
     private Vector3 position;
-    private bool button0;
-    private bool button1;
-    private bool button2;
-    private bool button3;
     public float mass;
     private float radius;
-    private Material material;
     private Rigidbody rigidBody;
 
     [Header("Stiffness Fator")]
@@ -44,11 +39,6 @@ public class HIP : MonoBehaviour
     void Awake()
     {
         position = new Vector3(0, 0, 0);
-        button0 = false;
-        button1 = false;
-        button2 = false;
-        button3 = false;
-        material = IHIP.GetComponent<Renderer>().material;
         rigidBody = GetComponent<Rigidbody>();
         isTouching = false;
     }
@@ -57,17 +47,17 @@ public class HIP : MonoBehaviour
     void Start()
     {
         //rigidBodies = GameObject.FindGameObjectsWithTag("Rigid Body");
-        myHapticManager = GetComponent<AbstractHM>();
+        myHapticManager = hapticManager.GetComponent<HM>();
     }
 
     private void UpdateHapticDevice(){
         int hapticsFound = myHapticManager.GetHapticDevicesFound();
         hapticDevice = (hapticDevice > -1 && hapticDevice < hapticsFound) ? hapticDevice : hapticsFound - 1;
     }
-    private boolean IsButtonPressed(int buttonID){
+    public bool IsButtonPressed(int buttonID){
         return myHapticManager.GetButtonState(hapticDevice, buttonID);
     }
-    private Vector3 GetPosition(){
+    public Vector3 GetPosition(){
         return myHapticManager.GetPosition(hapticDevice);
     }
 
@@ -84,12 +74,16 @@ public class HIP : MonoBehaviour
     private void UpdateRaduis(){
         radius = (IHIP.GetComponent<Renderer>().bounds.extents.magnitude) / 2;
     }
-
+     public GameObject GetInteractionPoint()
+    {
+        return this.IHIP;
+    }
     // Update is called once per frame
     void Update()
     {
         UpdateHapticDevice();
         UpdateRaduis();
+        position = GetPosition();
         UpdateHapticDeviceMass();
         if (isTouching) {
             IHIP.transform.position = HIPCollidingPosition;
@@ -135,11 +129,6 @@ public class HIP : MonoBehaviour
 
         // obtain colliding object mass
         objectMass = collision.rigidbody.mass;
-
-        foreach (ContactPoint contact in collision.contacts)
-        {
-            Debug.DrawRay(contact.point, contact.normal, Color.black);
-        }
     }
 
     void OnCollisionExit(Collision collision)

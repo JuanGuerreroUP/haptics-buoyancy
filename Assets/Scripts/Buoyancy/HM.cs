@@ -4,9 +4,8 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 
-public abstract class AbstractHM : MonoBehaviour
+public class HM : MonoBehaviour
 {
-    public FluidSim fluid;
 
     // plugin import
     private IntPtr myHapticPlugin;
@@ -16,7 +15,7 @@ public abstract class AbstractHM : MonoBehaviour
     private bool hapticThreadIsRunning;
     // haptic devices in the scene
     public GameObject[] hapticCursors;
-    AbstractHIP[] myHIP = new AbstractHIP[16];
+    HIP[] myHIP = new HIP[16];
 
     // haptic workspace
     public float workspace = 100.0f;
@@ -46,7 +45,7 @@ public abstract class AbstractHM : MonoBehaviour
             Debug.Log("Haptic Devices Found: " + HapticPluginImport.GetHapticsDetected(myHapticPlugin).ToString());
             for (int i = 0; i < hapticDevices; i++)
             {
-                myHIP[i] = hapticCursors[i].GetComponent<AbstractHIP>();
+                myHIP[i] = hapticCursors[i].GetComponent<HIP>();
             }
         }
         else
@@ -98,17 +97,6 @@ public abstract class AbstractHM : MonoBehaviour
                 button1[i] = HapticPluginImport.GetHapticsButtons(myHapticPlugin, i, 2);
                 button2[i] = HapticPluginImport.GetHapticsButtons(myHapticPlugin, i, 3);
                 button3[i] = HapticPluginImport.GetHapticsButtons(myHapticPlugin, i, 4);
-
-
-                AbstractHIP hip = fluid.getHIP();
-                Vector3 gravity = new Vector3(0, -9.8f, 0);
-                Vector3 force = myHIP[i].mass * gravity;
-
-                if (hip != null)
-                {
-                    force.y += 5;
-                }
-                HapticPluginImport.SetHapticsForce(myHapticPlugin, i, force);
 
                 if (myHIP[i].HipIsColliding())
                 {
