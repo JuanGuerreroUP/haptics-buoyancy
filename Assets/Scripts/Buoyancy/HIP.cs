@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class AbstractHIP : MonoBehaviour
+public class HIP : MonoBehaviour
 {
     // establish Haptic Manager and IHIP objects
     public GameObject hapticManager;
@@ -39,8 +39,6 @@ public abstract class AbstractHIP : MonoBehaviour
     private float objectMass;
     private Vector3 HIPCollidingPosition;
     private Vector3 objectCollidingPosition;
-
-    abstract void OnUpdate();
 
     // Called when the script instance is being loaded
     void Awake()
@@ -101,7 +99,6 @@ public abstract class AbstractHIP : MonoBehaviour
             IHIP.transform.position = position;
             transform.position = position;
         }
-        OnUpdate();
         UpdateDampingFactors();
     }
 
