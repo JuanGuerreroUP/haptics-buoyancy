@@ -580,26 +580,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 762372730}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &835251240
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1936970194446081}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4779315ec070a14190cdc507e76e050, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hapticManager: {fileID: 2113542309}
-  IHIP: {fileID: 1753564553208681}
-  hapticDevice: 0
-  mass: 0.35
-  Kp: 10
-  Kv: 20
-  Kvr: 10
-  Kvg: 10
 --- !u!1 &848683238
 GameObject:
   m_ObjectHideFlags: 0
@@ -1965,7 +1945,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2113542310}
-  - component: {fileID: 2113542311}
+  - component: {fileID: 2113542312}
   m_Layer: 0
   m_Name: Haptic Manager (HM)
   m_TagString: Untagged
@@ -1988,7 +1968,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2113542311
+--- !u!114 &2113542312
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1997,7 +1977,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2113542309}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d9898d615609da94393d2808e726a038, type: 3}
+  m_Script: {fileID: 11500000, guid: 1e47e35c68102e649be7a27579a27c9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   hapticCursors:
@@ -2108,8 +2088,7 @@ GameObject:
   - component: {fileID: 4058576797017449}
   - component: {fileID: 135576993891265567}
   - component: {fileID: 54683353950958359}
-  - component: {fileID: 835251240}
-  - component: {fileID: 135576993891265568}
+  - component: {fileID: 135576993891265569}
   m_Layer: 0
   m_Name: Haptic Interaction Point (HIP)
   m_TagString: Untagged
@@ -2243,7 +2222,7 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &135576993891265568
+--- !u!114 &135576993891265569
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2252,8 +2231,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1936970194446081}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9298f6d931c028640b44a6589a633a18, type: 3}
+  m_Script: {fileID: 11500000, guid: 6239a34d846447d4ba332ee510ca7364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prevParent: {fileID: 0}
-  grabbedObj: {fileID: 0}
+  hapticManager: {fileID: 2113542309}
+  IHIP: {fileID: 1753564553208681}
+  mass: 0.35
+  Kp: 100
+  Kv: 20
+  Kvr: 10
+  Kvg: 10
