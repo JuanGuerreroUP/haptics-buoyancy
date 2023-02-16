@@ -4,7 +4,7 @@ using UnityEngine;
 public class FluidSim : MonoBehaviour
 {
     private List<Rigidbody> physicObjects = new List<Rigidbody>();
-    private HIP_SE hip;
+    private AbstractHIP hip;
    
 
     private void OnTriggerEnter(Collider other)
@@ -15,7 +15,7 @@ public class FluidSim : MonoBehaviour
             Debug.Log(rb.gameObject.name);
             this.physicObjects.Add(rb);
         }
-        HIP_SE hip = other.gameObject.GetComponent<HIP_SE>();
+        AbstractHIP hip = other.gameObject.GetComponent<AbstractHIP>();
         if(hip != null)
         {
             this.hip = hip;
@@ -29,7 +29,7 @@ public class FluidSim : MonoBehaviour
         {
             this.physicObjects.Remove(rb);
         }
-        HIP_SE myhip = other.gameObject.GetComponent<HIP_SE>();
+        AbstractHIP myhip = other.gameObject.GetComponent<AbstractHIP>();
         if (myhip != null)
         {
             this.hip = null;
@@ -47,7 +47,7 @@ public class FluidSim : MonoBehaviour
         
     }
 
-    public HIP_SE getHIP()
+    public AbstractHIP getHIP()
     {
         return this.hip;
     }

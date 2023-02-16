@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 
-public class HM_SE : MonoBehaviour
+public abstract class AbstractHM : MonoBehaviour
 {
     public FluidSim fluid;
 
@@ -16,7 +16,7 @@ public class HM_SE : MonoBehaviour
     private bool hapticThreadIsRunning;
     // haptic devices in the scene
     public GameObject[] hapticCursors;
-    HIP_SE[] myHIP = new HIP_SE[16];
+    AbstractHIP[] myHIP = new AbstractHIP[16];
 
     // haptic workspace
     public float workspace = 100.0f;
@@ -46,7 +46,7 @@ public class HM_SE : MonoBehaviour
             Debug.Log("Haptic Devices Found: " + HapticPluginImport.GetHapticsDetected(myHapticPlugin).ToString());
             for (int i = 0; i < hapticDevices; i++)
             {
-                myHIP[i] = (HIP_SE)hapticCursors[i].GetComponent(typeof(HIP_SE));
+                myHIP[i] = hapticCursors[i].GetComponent<AbstractHIP>();
             }
         }
         else
@@ -99,8 +99,8 @@ public class HM_SE : MonoBehaviour
                 button2[i] = HapticPluginImport.GetHapticsButtons(myHapticPlugin, i, 3);
                 button3[i] = HapticPluginImport.GetHapticsButtons(myHapticPlugin, i, 4);
 
-                
-                HIP_SE hip = fluid.getHIP();
+
+                AbstractHIP hip = fluid.getHIP();
                 Vector3 gravity = new Vector3(0, -9.8f, 0);
                 Vector3 force = myHIP[i].mass * gravity;
 
@@ -196,7 +196,7 @@ public class HM_SE : MonoBehaviour
         }
         return temp;
     }
-    
+
     public float GetHapticDeviceInfo(int numHapDev, int parameter)
     {
         // Haptic info variables
@@ -250,7 +250,7 @@ public class HM_SE : MonoBehaviour
         Vector3 direction = desiredPosition - position[hapDevNum];
         Vector3 forceField = myHIP[hapDevNum].Kp * direction;
         HapticPluginImport.SetHapticsForce(myHapticPlugin, hapDevNum, forceField);
-        
+
         // compute linear damping force
         Vector3 linearVelocity = HapticPluginImport.GetHapticsLinearVelocity(myHapticPlugin, hapDevNum);
         Vector3 forceDamping = -myHIP[hapDevNum].Kv * linearVelocity;

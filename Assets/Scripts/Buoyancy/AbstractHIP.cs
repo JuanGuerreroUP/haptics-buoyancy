@@ -1,15 +1,15 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HIP_SE : MonoBehaviour
+public abstract class AbstractHIP : MonoBehaviour
 {
     // establish Haptic Manager and IHIP objects
     public GameObject hapticManager;
     public GameObject IHIP;
 
     // get haptic device information from the haptic manager
-    private HM_SE myHapticManager;
+    private AbstractHM myHapticManager;
 
     // haptic device number
     public int hapticDevice;
@@ -57,7 +57,7 @@ public class HIP_SE : MonoBehaviour
     void Start()
     {
         //rigidBodies = GameObject.FindGameObjectsWithTag("Rigid Body");
-        myHapticManager = (HM_SE)hapticManager.GetComponent(typeof(HM_SE));
+        myHapticManager = GetComponent<AbstractHM>();
     }
 
     // Update is called once per frame
@@ -127,10 +127,10 @@ public class HIP_SE : MonoBehaviour
             return;
         // HIP is touching an object
         isTouching = true;
-        
+
         // calculate the collision point
         objectCollidingPosition = position + (collision.contacts[0].normal * Mathf.Abs(collision.contacts[0].separation));
-        
+
         // obtain colliding object mass
         objectMass = collision.rigidbody.mass;
     }
@@ -166,7 +166,7 @@ public class HIP_SE : MonoBehaviour
         isTouching = false;
     }
 
-    public bool HipIsColliding ()
+    public bool HipIsColliding()
     {
         return isTouching;
     }
