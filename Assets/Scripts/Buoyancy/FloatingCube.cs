@@ -3,18 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider))]
-public class FloatingCube : AbstractFloatingObject<BoxCollider> {
+public class FloatingCube : AbstractFloatingObject {
 
     public override float GetObjVolume()
     {
-        Vector3 size = this.transform.localScale;
-        return size.x * size.y * size.z;
+        return this.transformHelper.scale.x * this.transformHelper.scale.y * this.transformHelper.scale.z;
     }
     //olozada@up.edu.mx
 
     public override float GetDisplacedVolume()
     {
-        Vector3 size = this.transform.localScale;
-        return size.x*size.z*GetH();
+        return this.transformHelper.scale.x* this.transformHelper.scale.z*GetH();
     }
 }

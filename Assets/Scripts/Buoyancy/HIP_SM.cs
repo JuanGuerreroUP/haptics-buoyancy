@@ -39,6 +39,7 @@ public class HIP_SM : MonoBehaviour
     private bool isInteracting;
     private bool isGrabbed;
     private float objectMass;
+    private AbstractFloatingObject grabbedObject;
     private Vector3 HIPCollidingPosition;
     private Vector3 objectCollidingPosition;
     private Transform prevParent = null;
@@ -116,6 +117,7 @@ public class HIP_SM : MonoBehaviour
             }
             isGrabbed = false;
             isInteracting = false;
+            grabbedObject = null;
         }
 
         // update position
@@ -201,14 +203,18 @@ public class HIP_SM : MonoBehaviour
         {
             if (!isGrabbed && constraints != UnityEngine.RigidbodyConstraints.FreezeAll)
             {
-                isGrabbed = true;
-                isInteracting = true;
+                grabbedObject = collision.transform.GetComponent<AbstractFloatingObject>();
+                if(grabbedObject != null)
+                {
+                    isGrabbed = true;
+                    isInteracting = true;
 
-                manipObj = collision.gameObject;
-                prevParent = collision.transform.parent;
-                collision.transform.parent = transform;
-                collision.rigidbody.useGravity = false;
-                collision.rigidbody.isKinematic = true;
+                    manipObj = collision.gameObject;
+                    prevParent = collision.transform.parent;
+                    collision.transform.parent = transform;
+                    collision.rigidbody.useGravity = false;
+                    collision.rigidbody.isKinematic = true;
+                }
             }
         }
         else
@@ -240,6 +246,11 @@ public class HIP_SM : MonoBehaviour
     public bool ObjectIsGrabbed()
     {
         return isGrabbed;
+    }
+
+    public AbstractFloatingObject getFloatingObject()
+    {
+        return this.grabbedObject;
     }
 
     public Vector3 CollidingObjectPosition()

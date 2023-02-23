@@ -28,6 +28,7 @@ public class HM_SM : MonoBehaviour
     private bool[] button1 = new bool[16];
     private bool[] button2 = new bool[16];
     private bool[] button3 = new bool[16];
+    public float k;
 
     // Use this for initialization
     void Start()
@@ -95,12 +96,17 @@ public class HM_SM : MonoBehaviour
                 button2[i] = HapticPluginImport.GetHapticsButtons(myHapticPlugin, i, 3);
                 button3[i] = HapticPluginImport.GetHapticsButtons(myHapticPlugin, i, 4);
 
-                if (button0[i] && myHIP[i].ObjectIsGrabbed())
+                AbstractFloatingObject floatingObject = myHIP[i].getFloatingObject();
+                if (floatingObject != null)
+                {
+                    HapticPluginImport.SetHapticsForce(myHapticPlugin, i, floatingObject.GetNetForce()*k);
+                }
+                /*if (button0[i] && myHIP[i].ObjectIsGrabbed())
                 {
                     Vector3 gravity = new Vector3(0, -9.8f, 0);
                     Vector3 gravityForce = myHIP[i].CollidingObjectMass() * gravity;
                     HapticPluginImport.SetHapticsForce(myHapticPlugin, i, gravityForce);
-                }
+                }*/
                 else if (myHIP[i].HipIsColliding() && !myHIP[i].HipIsInteracting())
                 {
                     SetForceByDesiredPosition(i, myHIP[i].CollidingObjectPosition());

@@ -138,6 +138,8 @@ GameObject:
   - component: {fileID: 36112990}
   - component: {fileID: 36112989}
   - component: {fileID: 36112988}
+  - component: {fileID: 36112994}
+  - component: {fileID: 36112995}
   m_Layer: 0
   m_Name: testCube
   m_TagString: Untagged
@@ -153,8 +155,8 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 36112987}
   serializedVersion: 2
-  m_Mass: 0.05
-  m_Drag: 0.5
+  m_Mass: 0.5
+  m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 0
   m_IsKinematic: 0
@@ -187,6 +189,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   density: 0.5
+  transformHelper: {fileID: 0}
 --- !u!23 &36112991
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -252,6 +255,37 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &36112994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 36112987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e17c7d042cac9f45be2de5a70504be2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scale: {x: 0, y: 0, z: 0}
+  position: {x: 0, y: 0, z: 0}
+  rotation: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &36112995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 36112987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52ab8e347af1e8e4681319ae91017936, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  drag: 0
+  velocity: {x: 0, y: 0, z: 0}
+  position: {x: 0, y: 0, z: 0}
+  mass: 0
 --- !u!1 &147866050
 GameObject:
   m_ObjectHideFlags: 0
@@ -1047,6 +1081,8 @@ GameObject:
   - component: {fileID: 1499847944}
   - component: {fileID: 1499847943}
   - component: {fileID: 1499847942}
+  - component: {fileID: 1499847948}
+  - component: {fileID: 1499847949}
   m_Layer: 0
   m_Name: testCube (1)
   m_TagString: Untagged
@@ -1096,6 +1132,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   density: 0.7
+  transformHelper: {fileID: 0}
 --- !u!23 &1499847945
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1161,6 +1198,37 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1499847948
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1499847941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e17c7d042cac9f45be2de5a70504be2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scale: {x: 0, y: 0, z: 0}
+  position: {x: 0, y: 0, z: 0}
+  rotation: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &1499847949
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1499847941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52ab8e347af1e8e4681319ae91017936, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  drag: 0
+  velocity: {x: 0, y: 0, z: 0}
+  position: {x: 0, y: 0, z: 0}
+  mass: 0
 --- !u!1 &1520204773
 GameObject:
   m_ObjectHideFlags: 0
@@ -1390,6 +1458,27 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1667166513 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 134676, guid: 6488b6e6bbe8a9c4585b531a71d8211c,
+    type: 3}
+  m_PrefabInstance: {fileID: 1078298201}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1667166514
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1667166513}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e17c7d042cac9f45be2de5a70504be2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scale: {x: 0, y: 0, z: 0}
+  position: {x: 0, y: 0, z: 0}
+  rotation: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &1675765317
 GameObject:
   m_ObjectHideFlags: 0
@@ -1983,6 +2072,7 @@ MonoBehaviour:
   hapticCursors:
   - {fileID: 1936970194446081}
   workspace: 500
+  k: 0.1
 --- !u!1 &2141188328
 GameObject:
   m_ObjectHideFlags: 0
@@ -2237,7 +2327,7 @@ MonoBehaviour:
   hapticManager: {fileID: 2113542309}
   IHIP: {fileID: 1753564553208681}
   mass: 0.35
-  Kp: 100
-  Kv: 20
-  Kvr: 10
-  Kvg: 10
+  Kp: 1
+  Kv: 1
+  Kvr: 1
+  Kvg: 1

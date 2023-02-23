@@ -3,29 +3,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
-public abstract class AbstractFloatingObject<T>: MonoBehaviour, ILiquidReactive where T: Collider {
+[RequireComponent(typeof(TransformHelper))]
+[RequireComponent(typeof(PhysicsHelper))]
+public abstract class AbstractFloatingObject: MonoBehaviour, ILiquidReactive {
     
     public float density;
-
-    private T col;
-    private Rigidbody rb;
+    private PhysicsHelper rb;
     private Liquid fluid;
+    public TransformHelper transformHelper;
 
     public abstract float GetObjVolume();
     public abstract float GetDisplacedVolume();
 
-    public void Start() {
-        this.rb = gameObject.GetComponent<Rigidbody>();
-        this.col = this.GetComponent<T>();
+    public void Awake() {
+        this.rb = gameObject.GetComponent<PhysicsHelper>();
+        this.transformHelper = GetComponent<TransformHelper>();
         this.rb.mass = GetObjVolume() * this.density;
+        
         //Debug.Log("Density of " + this.name + ": " +  this.GetDensity());
     }
 
     public void FixedUpdate() {
         HIP hip = this.transform.parent == null ? null : this.transform.parent.gameObject.GetComponent<HIP>();
         if (hip == null){
-            this.rb.AddForce(GetNetForce());
+            this.rb.GetRigidbody().AddForce(GetNetForce());
         }
     }
 
@@ -34,13 +35,12 @@ public abstract class AbstractFloatingObject<T>: MonoBehaviour, ILiquidReactive 
         if(waterLevel == null){
             return 0;
         }
-        float maxH = this.transform.localScale.y;
-        float top = this.transform.position.y - (maxH / 2f);
+        float maxH = this.transformHelper.scale.y;
+        float top = this.transformHelper.position.y - (maxH / 2f);
         float h = waterLevel.Value - top;
         if( h <= 0) {
             h = 0;
         }
-        Debug.Log(h);
         return h;
     }
 
@@ -54,17 +54,13 @@ public abstract class AbstractFloatingObject<T>: MonoBehaviour, ILiquidReactive 
         }
     }
 
-    public T GetCollider() {
-        return this.col;
-    }
-
     [Obsolete]
     public float GetDensity()
     {
         return rb.mass / GetObjVolume();
     }
 
-    private static Vector3 CalcForce(float volume, float density) { 
+    public static Vector3 CalcForce(float volume, float density) { 
         return volume * density * -Physics.gravity;
     }
 
@@ -86,7 +82,7 @@ public abstract class AbstractFloatingObject<T>: MonoBehaviour, ILiquidReactive 
 
     public Vector3 GetNetForce() { 
         Vector3 netForce = this.GetBuoyantForce() - this.GetWeightForce();
-        Debug.Log(netForce);
+        Debug.Log("NetF:" + netForce);
         return netForce - GetDragForce();
     }
 }
