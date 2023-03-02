@@ -10,17 +10,17 @@ public abstract class AbstractFloatingObject: MonoBehaviour, ILiquidReactive {
     public float density;
     private PhysicsHelper rb;
     private Liquid fluid;
-    public TransformHelper transformHelper;
+    protected TransformHelper transformHelper;
 
     public abstract float GetObjVolume();
     public abstract float GetDisplacedVolume();
 
     public void Awake() {
-        this.rb = gameObject.GetComponent<PhysicsHelper>();
+        this.rb = GetComponent<PhysicsHelper>();
         this.transformHelper = GetComponent<TransformHelper>();
+    }
+    public void Start() {
         this.rb.Mass = GetObjVolume() * this.density;
-        
-        //Debug.Log("Density of " + this.name + ": " +  this.GetDensity());
     }
 
     public void FixedUpdate() {

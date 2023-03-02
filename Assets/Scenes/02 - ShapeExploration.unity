@@ -189,7 +189,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   density: 0.5
-  transformHelper: {fileID: 0}
 --- !u!23 &36112991
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1133,7 +1132,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   density: 0.7
-  transformHelper: {fileID: 0}
 --- !u!23 &1499847945
 MeshRenderer:
   m_ObjectHideFlags: 0
