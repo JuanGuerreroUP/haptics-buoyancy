@@ -9,11 +9,13 @@ public class Liquid : MonoBehaviour
     private BoxCollider waterCollider;
     private TransformHelper waterPlane;
 
-    private void Start() {
-        this.waterPlane = this.transform.GetChild(0).GetComponent<TransformHelper>() ;
+    private void Awake() {
+        Transform waterTransform = this.transform.GetChild(0);
+        this.waterPlane = waterTransform.GetComponent<TransformHelper>();
+        PlaneCornerFinder cornerFinder = waterTransform.GetComponent<PlaneCornerFinder>();
         this.waterCollider = GetComponent<BoxCollider>();
-        this.waterCollider.center = new Vector3(0, GetWaterLevel()/2, 0);
-        this.waterCollider.size = new Vector3(this.waterPlane.Scale.x, GetWaterLevel(), this.waterPlane.Scale.z);
+        this.waterCollider.center = new Vector3(0, -50 + GetWaterLevel(), 0);
+        this.waterCollider.size = new Vector3(cornerFinder.GetWidth(), 100, cornerFinder.GetDepth()); 
     }
 
     public float GetWaterLevel() {
