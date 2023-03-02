@@ -6,13 +6,31 @@ public class FloatingSphere : AbstractFloatingObject
 {
     public override float GetDisplacedVolume()
     {
-        throw new System.NotImplementedException();
+        float d = this.transformHelper.Scale.x;
+        float r = d / 2;
+        float h = GetH();
+        if (h > r) {
+            return GetSphereVolume(r, r) + GetCylinderVolume(r, h - r);
+        }
+        else {
+            return GetSphereVolume(r, h);
+        }
+    }
+
+    private float GetSphereVolume(float r, float h)
+    {
+        return ((Mathf.PI * Mathf.Pow(h, 2)) / 3) * ((3 * r) - h);
+    }
+
+    private float GetCylinderVolume(float r, float h)
+    {
+        return Mathf.PI * Mathf.Pow(r, 2) * h;
     }
 
     override public float GetObjVolume()
     {
-        float r = 1;// this.GetCollider().radius;
-        float h = 0;
-        return ((Mathf.PI * Mathf.Pow(h, 2))/3) * ((3*r)-h);
+        float d = this.transformHelper.Scale.x;
+        float r = d / 2;
+        return GetSphereVolume(r, d);
     }
 }

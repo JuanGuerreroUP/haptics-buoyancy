@@ -8,7 +8,6 @@ public class PhysicsHelper : MonoBehaviour
     private Rigidbody rb;
     private float drag;
     private Vector3 velocity;
-    private Vector3 position;
     private float mass;
 
 
@@ -19,10 +18,6 @@ public class PhysicsHelper : MonoBehaviour
     public Vector3 Velocity
     {
         get { return this.velocity; }
-    }
-    public Vector3 Position
-    {
-        get { return this.position; }
     }
     public float Mass
     {
@@ -36,7 +31,6 @@ public class PhysicsHelper : MonoBehaviour
     private void UpdateValues() {
         this.drag = this.rb.drag;
         this.velocity = this.rb.velocity;
-        this.position = this.rb.position;
         this.mass = this.rb.mass;
     }
 
