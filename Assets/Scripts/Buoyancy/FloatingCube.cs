@@ -7,12 +7,12 @@ public class FloatingCube : AbstractFloatingObject {
 
     public override float GetObjVolume()
     {
-        return this.transformHelper.scale.x * this.transformHelper.scale.y * this.transformHelper.scale.z;
+        return this.transformHelper.Scale.x * this.transformHelper.Scale.y * this.transformHelper.Scale.z;
     }
     //olozada@up.edu.mx
 
     public override float GetDisplacedVolume()
     {
-        return this.transformHelper.scale.x* this.transformHelper.scale.z*GetH();
+        return this.transformHelper.Scale.x* this.transformHelper.Scale.z*GetH();
     }
 }

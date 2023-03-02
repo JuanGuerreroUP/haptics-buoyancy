@@ -18,7 +18,7 @@ public abstract class AbstractFloatingObject: MonoBehaviour, ILiquidReactive {
     public void Awake() {
         this.rb = gameObject.GetComponent<PhysicsHelper>();
         this.transformHelper = GetComponent<TransformHelper>();
-        this.rb.mass = GetObjVolume() * this.density;
+        this.rb.Mass = GetObjVolume() * this.density;
         
         //Debug.Log("Density of " + this.name + ": " +  this.GetDensity());
     }
@@ -35,8 +35,8 @@ public abstract class AbstractFloatingObject: MonoBehaviour, ILiquidReactive {
         if(waterLevel == null){
             return 0;
         }
-        float maxH = this.transformHelper.scale.y;
-        float top = this.transformHelper.position.y - (maxH / 2f);
+        float maxH = this.transformHelper.Scale.y;
+        float top = this.transformHelper.Position.y - (maxH / 2f);
         float h = waterLevel.Value - top;
         if( h <= 0) {
             h = 0;
@@ -57,7 +57,7 @@ public abstract class AbstractFloatingObject: MonoBehaviour, ILiquidReactive {
     [Obsolete]
     public float GetDensity()
     {
-        return rb.mass / GetObjVolume();
+        return rb.Mass / GetObjVolume();
     }
 
     public static Vector3 CalcForce(float volume, float density) { 
@@ -77,7 +77,7 @@ public abstract class AbstractFloatingObject: MonoBehaviour, ILiquidReactive {
     public Vector3 GetDragForce()
     {
         float fluidDensity = this.fluid?.density ?? 0;//1.293f;
-        return 0.5f * fluidDensity * this.rb.drag * this.rb.velocity * this.rb.velocity.magnitude;
+        return 0.5f * fluidDensity * this.rb.Drag * this.rb.Velocity * this.rb.Velocity.magnitude;
     }
 
     public Vector3 GetNetForce() { 

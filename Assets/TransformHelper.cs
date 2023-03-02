@@ -4,13 +4,22 @@ using UnityEngine;
 
 public class TransformHelper : MonoBehaviour
 {
-    [HideInInspector]
-    public Vector3 scale;
-    [HideInInspector]
-    public Vector3 position;
-    [HideInInspector]
-    public Quaternion rotation;
-    // Start is called before the first frame update
+    private Vector3 scale;
+    private Vector3 position;
+    private Quaternion rotation;
+
+    public Vector3 Scale
+    {
+        get { return this.scale; }
+    }
+    public Vector3 Position
+    {
+        get { return this.position; }
+    }
+    public Quaternion Rotation
+    {
+        get { return this.rotation; }
+    }
 
     private void UpdateTransform()
     {
@@ -23,8 +32,7 @@ public class TransformHelper : MonoBehaviour
         this.UpdateTransform();
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         this.UpdateTransform();
     }
