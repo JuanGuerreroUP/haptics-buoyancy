@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.57481706, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -267,9 +267,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e17c7d042cac9f45be2de5a70504be2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scale: {x: 0, y: 0, z: 0}
-  position: {x: 0, y: 0, z: 0}
-  rotation: {x: 0, y: 0, z: 0, w: 0}
 --- !u!114 &36112995
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -282,10 +279,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52ab8e347af1e8e4681319ae91017936, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  drag: 0
-  velocity: {x: 0, y: 0, z: 0}
-  position: {x: 0, y: 0, z: 0}
-  mass: 0
 --- !u!1 &147866050
 GameObject:
   m_ObjectHideFlags: 0
@@ -875,7 +868,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 440718, guid: 6488b6e6bbe8a9c4585b531a71d8211c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2
+      value: 7.53
       objectReference: {fileID: 0}
     - target: {fileID: 440718, guid: 6488b6e6bbe8a9c4585b531a71d8211c, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1218,9 +1211,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e17c7d042cac9f45be2de5a70504be2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scale: {x: 0, y: 0, z: 0}
-  position: {x: 0, y: 0, z: 0}
-  rotation: {x: 0, y: 0, z: 0, w: 0}
 --- !u!114 &1499847949
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1233,10 +1223,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52ab8e347af1e8e4681319ae91017936, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  drag: 0
-  velocity: {x: 0, y: 0, z: 0}
-  position: {x: 0, y: 0, z: 0}
-  mass: 0
 --- !u!1 &1520204773
 GameObject:
   m_ObjectHideFlags: 0
@@ -1484,9 +1470,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e17c7d042cac9f45be2de5a70504be2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scale: {x: 0, y: 0, z: 0}
-  position: {x: 0, y: 0, z: 0}
-  rotation: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &1675765317
 GameObject:
   m_ObjectHideFlags: 0
@@ -2123,8 +2106,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 97.621185, y: 59.902626, z: 86.49285}
-  m_Center: {x: -1.4485168, y: -25.810719, z: 9.509411}
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!4 &2141188331
 Transform:
   m_ObjectHideFlags: 0
