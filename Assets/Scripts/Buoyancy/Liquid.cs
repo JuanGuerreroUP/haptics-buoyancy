@@ -5,21 +5,33 @@ using UnityEngine;
 public class Liquid : MonoBehaviour
 {
     public float density;
+    [SerializeField]
+    private float depth = 100;
 
     private BoxCollider waterCollider;
     private TransformHelper waterPlane;
+
 
     private void Awake() {
         Transform waterTransform = this.transform.GetChild(0);
         this.waterPlane = waterTransform.GetComponent<TransformHelper>();
         PlaneCornerFinder cornerFinder = waterTransform.GetComponent<PlaneCornerFinder>();
         this.waterCollider = GetComponent<BoxCollider>();
-        this.waterCollider.center = new Vector3(0, -50 + GetWaterLevel(), 0);
-        this.waterCollider.size = new Vector3(cornerFinder.GetWidth(), 100, cornerFinder.GetDepth()); 
+        float halfDepth = depth / 2;
+        this.waterCollider.center = new Vector3(0, -halfDepth + GetWaterLevel(), 0);
+        this.waterCollider.size = new Vector3(cornerFinder.GetWidth(), depth, cornerFinder.GetDepth()); 
     }
 
-    public float GetWaterLevel() {
+    private float GetWaterLevel() {
         return waterPlane.Position.y;
+    }
+    public float GetDepth(float y)
+    {
+        return Mathf.Abs(GetWaterLevel() - y);
+    }
+    public float GetFloorLevel()
+    {
+        return GetWaterLevel() - depth;
     }
 
     private void OnTriggerEnter(Collider other)

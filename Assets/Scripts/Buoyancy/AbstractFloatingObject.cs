@@ -5,49 +5,62 @@ using UnityEngine;
 
 [RequireComponent(typeof(TransformHelper))]
 [RequireComponent(typeof(PhysicsHelper))]
-public abstract class AbstractFloatingObject: MonoBehaviour, ILiquidReactive {
-    
+public abstract class AbstractFloatingObject : MonoBehaviour, ILiquidReactive
+{
+
     public float density;
     private PhysicsHelper rb;
     private Liquid fluid;
     protected TransformHelper transformHelper;
+    private ForceViewer forceViewer;
 
     public abstract float GetObjVolume();
     public abstract float GetDisplacedVolume();
 
-    public void Awake() {
+    public void Awake()
+    {
         this.rb = GetComponent<PhysicsHelper>();
         this.transformHelper = GetComponent<TransformHelper>();
+        this.forceViewer = FindObjectOfType<ForceViewer>();
     }
-    public void Start() {
+    public void Start()
+    {
         this.rb.Mass = GetObjVolume() * this.density;
     }
 
-    public void FixedUpdate() {
+    public void FixedUpdate()
+    {
         HIP hip = this.transform.parent == null ? null : this.transform.parent.gameObject.GetComponent<HIP>();
-        if (hip == null){
-            this.rb.GetRigidbody().AddForce(GetNetForce());
+        if (hip == null)
+        {
+            Vector3 netForce = GetNetForce(this.forceViewer);
+            this.rb.GetRigidbody().AddForce(netForce);
         }
     }
 
-    public float GetH() {
-        float? waterLevel = this.fluid?.GetWaterLevel();
-        if(waterLevel == null){
+    public float GetH()
+    {
+        if (this.fluid == null)
+        {
             return 0;
         }
         float maxH = this.transformHelper.Scale.y;
         float top = this.transformHelper.Position.y - (maxH / 2f);
-        float h = waterLevel.Value - top;
-        if( h <= 0) {
+        float? h = this.fluid?.GetDepth(top);
+        Debug.Log("Depth" + h);
+        if (!h.HasValue || h.Value <= 0)
+        {
             h = 0;
         }
-        return h;
+        return h.Value;
     }
 
-    public void SetWater(Liquid water) {
+    public void SetWater(Liquid water)
+    {
         this.fluid = water;
     }
-    public void UnsetWater(Liquid water) {
+    public void UnsetWater(Liquid water)
+    {
         if (this.fluid == water)
         {
             this.fluid = null;
@@ -60,7 +73,8 @@ public abstract class AbstractFloatingObject: MonoBehaviour, ILiquidReactive {
         return rb.Mass / GetObjVolume();
     }
 
-    public static Vector3 CalcForce(float volume, float density) { 
+    public static Vector3 CalcForce(float volume, float density)
+    {
         return volume * density * -Physics.gravity;
     }
 
@@ -80,9 +94,21 @@ public abstract class AbstractFloatingObject: MonoBehaviour, ILiquidReactive {
         return 0.5f * fluidDensity * this.rb.Drag * this.rb.Velocity * this.rb.Velocity.magnitude;
     }
 
-    public Vector3 GetNetForce() { 
-        Vector3 netForce = this.GetBuoyantForce() - this.GetWeightForce();
+    public Vector3 GetNetForce(ForceViewer forceViewer)
+    {
+        Vector3 buoyantForce = this.GetBuoyantForce();
+        Vector3 weight = this.GetWeightForce();
+        Vector3 dragForce = GetDragForce();
+        Vector3 netForce = buoyantForce - weight;
         Debug.Log("NetF:" + netForce);
-        return netForce - GetDragForce();
+        if (forceViewer != null)
+        {
+            forceViewer.SetForces(buoyantForce, weight, dragForce, netForce);
+        }
+        return netForce - dragForce;
+    }
+    public Vector3 GetNetForce()
+    {
+        return this.GetNetForce(null);
     }
 }

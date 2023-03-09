@@ -38,4 +38,9 @@ public class PlaneCornerFinder : MonoBehaviour
         FindCorners();
         return Mathf.Abs(corners[0].z - corners[2].z);
     }
+
+    public Vector3 GetCenter()
+    {
+        return this.transform.position;
+    }
 }
