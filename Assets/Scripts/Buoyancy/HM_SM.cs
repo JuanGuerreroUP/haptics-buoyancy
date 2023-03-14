@@ -77,8 +77,14 @@ public class HM_SM : MonoBehaviour
         // close haptic thread
         EndHapticThread();
         // delete haptic plugin
-        HapticPluginImport.DeleteHapticDevices(myHapticPlugin);
-        Debug.Log("Application ended correctly");
+        try
+        {
+            HapticPluginImport.DeleteHapticDevices(myHapticPlugin);
+            Debug.Log("Application ended correctly");
+        }catch(Exception e) {
+            Debug.LogError(e.Message);
+        }
+        
     }
 
     // Thread for haptic device handling
