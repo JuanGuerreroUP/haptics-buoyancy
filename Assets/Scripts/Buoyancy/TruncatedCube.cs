@@ -12,9 +12,11 @@ public class TruncatedCube {
     private readonly List<Vector3> cubeVertices;
     private readonly List<List<Vector3>> faces;
     private readonly HashSet<Vector3> newFace;
+    private readonly Vector3[] normals;
 
     public TruncatedCube(float xzPlane, Vector3[] vertices) {
         this.cubeVertices = new(vertices);
+        this.normals = new Vector3[6];
         this.faces = new();
         this.newFace = new();
         this.xzPlane = xzPlane;
@@ -47,87 +49,70 @@ public class TruncatedCube {
         return new(x, this.xzPlane, z);
     }
 
+    [Obsolete]
+    private void SetNextNormal(int v1, int v2, int v3, int v4) {
+        //How can I know if a point is in the same plane of a plain defined by three points?
+        normals[this.faces.Count] = Vector3.Cross(
+            this.cubeVertices[v2] - this.cubeVertices[v1],
+            this.cubeVertices[v4] - this.cubeVertices[v1]
+       ).normalized;
+    }
+
     public void CalcFace(int v1, int v2, int v3, int v4) {
+        //SetNextNormal(v1, v2, v3, v4);
         List<Vector3> updatedVertices = new();
-        Vector3 vertex, nextVertex, newVertex;
-        int[] indexes = { v1, v2, v3, v4, v1 };
-        for (int i = 0; i < 4; i++) {
+        Vector3 vertex;
+        int[] indexes = { v4, v1, v2, v3, v4, v1 };
+        for (int i = 1; i < 5; i++)
+        {
             vertex = this.cubeVertices[indexes[i]];
-            if (vertex.y <= this.xzPlane) {
+            if (vertex.y <= this.xzPlane)
+            {
                 updatedVertices.Add(vertex);
                 continue;
             }
-            nextVertex = this.cubeVertices[indexes[i + 1]];
-            if (nextVertex.y > this.xzPlane) {
-                int idx = i - 1;
-                if(idx < 0){
-                    idx = 3; //v4
-                }
-                nextVertex = this.cubeVertices[indexes[idx]];
-                if(nextVertex.y > this.xzPlane){
-                    continue;
-                }
-            }
-            newVertex = GetIntersection(vertex, nextVertex);
-            updatedVertices.Add(newVertex);
-            this.newFace.Add(newVertex);
+            AddNeighborIntesection(vertex, this.cubeVertices[indexes[i - 1]], updatedVertices);
+            AddNeighborIntesection(vertex, this.cubeVertices[indexes[i + 1]], updatedVertices);
+
         }
         if (updatedVertices.Count > 0) {
             this.faces.Add(updatedVertices);
         }
     }
 
-    private int GetDiagonalIndex(List<Vector3> square)
+    private void AddNeighborIntesection(Vector3 vertex, Vector3 neighbor, List<Vector3> updatedVertices)
     {
-        int far = 0;
-        float maxDistance = 0;
-        float temp;
-        for (int i = 1; i < 4; i++) {
-            temp = Vector3.Distance(square[0], square[i]);
-            if (temp > maxDistance) {
-                maxDistance = temp;
-                far = i;
-            }
+        if (vertex.y == neighbor.y) {
+            Debug.LogWarning("Prevented a division by zero");
+            return;
         }
-        return far;
+        if (neighbor.y <= this.xzPlane){
+            Vector3 newVertex = GetIntersection(vertex, neighbor);
+            updatedVertices.Add(newVertex);
+            this.newFace.Add(newVertex);
+        }
     }
 
-    private void SquareToTriangles(List<Vector3> square, List<Vector3[]> outlist, bool sorted) {
-        int[] neighbors;
-        int far;
-        if (sorted) {
-            neighbors = new int[] { 1, 3 };
-            far = 2;
+    private void PolygonToTriangles(List<Vector3> polygon, List<Vector3[]> outlist){
+        int nTriangles = polygon.Count - 2;
+        for (int i = 1; i <= nTriangles; i++) {
+            outlist.Add(new Vector3[] { polygon[0], polygon[i], polygon[i+1] });
         }
-        else {
-            far = GetDiagonalIndex(square);
-            HashSet<int> neighborsSet = new HashSet<int>(new int[] { 1, 2, 3 });
-            neighborsSet.Remove(far);
-            neighbors = neighborsSet.ToArray();
-        }
-        outlist.Add(new Vector3[] { square[0], square[neighbors[0]], square[far] });
-        outlist.Add(new Vector3[] { square[0], square[neighbors[1]], square[far] });
-    }
-
-    private void PentagonToTriangles(List<Vector3> pentagon, List<Vector3[]> outlist){
-        outlist.Add(new Vector3[] { pentagon[0], pentagon[1], pentagon[2] });
-        outlist.Add(new Vector3[] { pentagon[0], pentagon[2], pentagon[4] });
-        outlist.Add(new Vector3[] { pentagon[4], pentagon[2], pentagon[3] });
     }
 
     private void FaceToTriangles(List<Vector3> vertices, List<Vector3[]> outlist, bool sorted) {
+        if(vertices.Count <= 2) {
+            Debug.LogWarning("Recieved a wrong face with " + vertices.Count + "vertices");
+            return;
+        }
         if (vertices.Count == 3) {
             outlist.Add(vertices.ToArray());
+            return;
         }
-        else if (vertices.Count == 4) {
-            SquareToTriangles(vertices, outlist, sorted);
+        if (!sorted) {
+            vertices = GrahamScanner.SortPoints(vertices);
         }
-        else if (vertices.Count == 5) {
-            PentagonToTriangles(vertices, outlist);
-        }
-        else {
-            Debug.LogWarning("Recieved a wrong face with " + vertices.Count + "vertices");
-        }
+        PolygonToTriangles(vertices, outlist);
     }
 
     public List<Vector3[]> GetTriangles(){

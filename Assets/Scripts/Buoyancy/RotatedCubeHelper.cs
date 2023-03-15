@@ -42,7 +42,7 @@ public class RotatedCubeHelper : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update() {
+    void FixedUpdate() {
         GetWorldVertices();
         TruncatedCube truncatedCube = GetUnderwaterMesh();
         if (debug) {
@@ -62,6 +62,7 @@ public class RotatedCubeHelper : MonoBehaviour
         TruncatedCube truncatedCube = new(this.waterLevel, this.worldVertices);
         truncatedCube.CalcFace(0, 1, 2, 3);
         truncatedCube.CalcFace(0, 1, 5, 4);
+        
         truncatedCube.CalcFace(4, 5, 6, 7);
         truncatedCube.CalcFace(3, 2, 6, 7);
 
@@ -90,9 +91,9 @@ public class RotatedCubeHelper : MonoBehaviour
         {
             GameObject plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
             plane.transform.localScale = Vector3.one * 0.1f;
-            plane.GetComponent<Renderer>().material.color = new Color(
-                UnityEngine.Random.Range(0f, 1f), 0, UnityEngine.Random.Range(0f, 1f));
-            Destroy(plane.GetComponent<SphereCollider>());
+            float hue = UnityEngine.Random.Range(0f, 1f);
+            plane.GetComponent<Renderer>().material.color = Color.HSVToRGB(hue, 1, 0.5f + (i * 0.05f));
+            Destroy(plane.GetComponent<MeshCollider>());
             triangles[i] = plane.GetComponent<MeshFilter>();
             triangles[i].mesh = new Mesh();
         }

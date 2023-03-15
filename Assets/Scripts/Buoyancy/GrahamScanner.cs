@@ -5,7 +5,7 @@ using UnityEngine;
 
 public static class GrahamScanner
 {
-    public static List<Vector3> SortPoints(Vector3[] vertices)
+    public static List<Vector3> SortPoints(List<Vector3> vertices)
     {
         List<Vector3> sorted = new List<Vector3>();
         int lowestIndex = GetLowestIndex(vertices);
@@ -27,14 +27,12 @@ public static class GrahamScanner
         return sorted;
     }
 
-    private static int CompareAngles(Vector3 lowest, Vector3 v1, Vector3 v2) {
-        float angle1 = Mathf.Atan2(v1.y - lowest.y, v1.x - lowest.x);
-        float angle2 = Mathf.Atan2(v2.y - lowest.y, v2.x - lowest.x);
-
-        if (angle1 < angle2) {
+    private static int CompareAngles(Vector3 lowest, Vector3 v1, Vector3 v2){
+        Vector3 cross = Vector3.Cross(v1 - lowest, v2 - lowest);
+        if (cross.y > 0) {
             return -1;
         }
-        else if (angle1 > angle2) {
+        else if (cross.y < 0) {
             return 1;
         }
         else {
@@ -42,13 +40,14 @@ public static class GrahamScanner
         }
     }
 
-    private static bool IsRightTurn(Vector3 p1, Vector3 p2, Vector3 p3) {
-        return ((p2.x - p1.x) * (p3.y - p1.y) - (p2.y - p1.y) * (p3.x - p1.x)) < 0;
+    private static bool IsRightTurn(Vector3 v1, Vector3 v2, Vector3 v3) {
+        Vector3 cross = Vector3.Cross(v2 - v1, v3 - v1);
+        return cross.y < 0;
     }
 
-    private static int GetLowestIndex(Vector3[] vertices){
+    private static int GetLowestIndex(List<Vector3> vertices){
         int idx = 0;
-        for(int i = 1; i < vertices.Length; i++) {
+        for(int i = 1; i < vertices.Count; i++) {
             if (vertices[i].y < vertices[idx].y || (vertices[i].y == vertices[idx].y && vertices[i].x < vertices[idx].x)) {
                 idx = i;
             }
