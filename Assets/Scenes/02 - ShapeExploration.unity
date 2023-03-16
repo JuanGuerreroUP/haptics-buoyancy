@@ -1684,6 +1684,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buoyPref: {fileID: 1332564818288421464, guid: 87701614adbe08d4884a884f1f759ea8,
     type: 3}
+  buoyDaddy: {fileID: 1725283700}
   buoyBoxCorners:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}

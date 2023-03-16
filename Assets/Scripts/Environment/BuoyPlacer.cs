@@ -6,6 +6,7 @@ using UnityEngine;
 public class BuoyPlacer : MonoBehaviour
 {
     public GameObject buoyPref;
+    public Transform buoyDaddy;
     private int buoysNum;
     public Vector3[] buoyBoxCorners = new Vector3[4];
 
@@ -13,9 +14,6 @@ public class BuoyPlacer : MonoBehaviour
     {
         PlaneCornerFinder cornerFinder = GetComponent<PlaneCornerFinder>();
         Vector3[] corners = cornerFinder.GetCorners();
-        float x = cornerFinder.GetWidth();
-        float z = cornerFinder.GetDepth();
-        float y = corners[0].y;
 
         BuoyBoxCorners(corners);
         float buoySquareWidth = Mathf.Abs(buoyBoxCorners[0].x - buoyBoxCorners[1].x);
@@ -25,18 +23,12 @@ public class BuoyPlacer : MonoBehaviour
         SpawnBuoysWidth(5, buoyBoxCorners[2], buoySquareWidth);
         SpawnBuoysDepth(5, buoyBoxCorners[0], buoySquareDepth);
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     private void SpawnBuoysWidth(int divisions, Vector3 buoyCorner, float x)
     {
         float buoysSeparate = (x) / divisions;
         for (int i = 0; i <= divisions; i++)
         {
-            Instantiate(buoyPref, new Vector3(buoyCorner.x - (buoysSeparate * i * Mathf.Sign(buoyCorner.x)), buoyCorner.y, buoyCorner.z), Quaternion.identity);
+            Instantiate(buoyPref, new Vector3(buoyCorner.x - (buoysSeparate * i * Mathf.Sign(buoyCorner.x)), buoyCorner.y, buoyCorner.z), Quaternion.identity, buoyDaddy);
         }
     }
 
@@ -45,7 +37,7 @@ public class BuoyPlacer : MonoBehaviour
         float buoysSeparate = (z) / divisions;
         for (int i = 1; i < divisions; i++)
         {
-            Instantiate(buoyPref, new Vector3(buoyCorner.x, buoyCorner.y, buoyCorner.z - (buoysSeparate * i)), Quaternion.identity);
+            Instantiate(buoyPref, new Vector3(buoyCorner.x, buoyCorner.y, buoyCorner.z - (buoysSeparate * i)), Quaternion.identity, buoyDaddy);
         }
     }
 
