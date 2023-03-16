@@ -29,6 +29,7 @@ public class BuoyPlacer : MonoBehaviour
         for (int i = 0; i <= divisions; i++)
         {
             Instantiate(buoyPref, new Vector3(buoyCorner.x - (buoysSeparate * i * Mathf.Sign(buoyCorner.x)), buoyCorner.y, buoyCorner.z), Quaternion.identity, buoyDaddy);
+            
         }
     }
 
