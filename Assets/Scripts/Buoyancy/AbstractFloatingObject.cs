@@ -22,11 +22,14 @@ public abstract class AbstractFloatingObject : MonoBehaviour, ILiquidReactive
         this.rb = GetComponent<PhysicsHelper>();
         this.transformHelper = GetComponent<TransformHelper>();
         this.forceViewer = FindObjectOfType<ForceViewer>();
+        this.OnAwake();
     }
     public void Start()
     {
         this.rb.Mass = GetObjVolume() * this.density;
     }
+
+    protected virtual void OnAwake() { }
 
     public void FixedUpdate()
     {
@@ -55,7 +58,7 @@ public abstract class AbstractFloatingObject : MonoBehaviour, ILiquidReactive
         return h.Value;
     }
 
-    public void SetWater(Liquid water)
+    public virtual void SetWater(Liquid water)
     {
         this.fluid = water;
     }

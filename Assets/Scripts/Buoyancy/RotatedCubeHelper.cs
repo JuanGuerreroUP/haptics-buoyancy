@@ -10,12 +10,12 @@ public class RotatedCubeHelper : MonoBehaviour
 {
     private Vector3[] vertices;
     private Vector3[] worldVertices;
-    private Vector3 center;
 
     private GameObject[] spheres;
     private MeshFilter[] triangles;
+    private float volume;
 
-    public float waterLevel; //TODO: remove this property, read from Liquid
+    public float waterLevel;
 
     public bool debug;
     // Start is called before the first frame update
@@ -25,7 +25,6 @@ public class RotatedCubeHelper : MonoBehaviour
         Vector3 min = bounds.min;
         Vector3 max = bounds.max;
 
-        this.center = bounds.center;
         this.vertices = new Vector3[8];
         this.worldVertices = new Vector3[8];
 
@@ -38,14 +37,41 @@ public class RotatedCubeHelper : MonoBehaviour
         this.vertices[5] = new Vector3(max.x, max.y, min.z);
         this.vertices[6] = max;
         this.vertices[7] = new Vector3(min.x, max.y, max.z);
+        this.volume = this.transform.localScale.x * this.transform.localScale.y * this.transform.localScale.z;
 
     }
 
     // Update is called once per frame
     void FixedUpdate() {
         GetWorldVertices();
-        TruncatedCube truncatedCube = GetUnderwaterMesh();
-        if (debug) {
+        if(GetMinVertexAt(1).y > this.waterLevel){
+            this.volume = 0;
+            Plot(null);
+            return;
+        }
+
+        TruncatedCube truncatedCube;
+        if (this.waterLevel < this.transform.position.y) {
+            truncatedCube = GetUnderwaterMesh(this.waterLevel);
+            this.volume = truncatedCube.GetVolume();
+        }
+        else {
+            truncatedCube = GetUnderwaterMesh(this.transform.position.y);
+            this.volume = truncatedCube.GetVolume() + truncatedCube.GetPrismVolume(this.waterLevel);
+        }
+        Debug.Log("Volume: " + this.volume);
+        Plot(truncatedCube);
+    }
+
+    private void Plot(TruncatedCube truncatedCube){
+        if (debug && spheres == null) {
+            CreateSpheres();
+        }
+        if (!debug || truncatedCube == null) {
+            HideSpheres();
+            HideTriangles();
+        }
+        else {
             DrawVetices(truncatedCube);
             DrawTriangles(truncatedCube);
         }
@@ -56,10 +82,26 @@ public class RotatedCubeHelper : MonoBehaviour
             this.worldVertices[i] = this.transform.TransformPoint(this.vertices[i]);
         }
     }
+
+    public float GetVolume(){
+        return this.volume;
+    }
+
+    private Vector3 GetMinVertexAt(int dim){
+        Vector3 minVertex = this.worldVertices[0];
+        for (int i = 1; i < 8; i++)
+        {
+            if (this.worldVertices[i][dim] < minVertex[dim]){
+                minVertex = this.worldVertices[i];
+            }
+        }
+        return minVertex;
+
+    }
     
 
-    private TruncatedCube GetUnderwaterMesh(){
-        TruncatedCube truncatedCube = new(this.waterLevel, this.worldVertices);
+    private TruncatedCube GetUnderwaterMesh(float xzPlane){
+        TruncatedCube truncatedCube = new(xzPlane, this.worldVertices, this.transform.position);
         truncatedCube.CalcFace(0, 1, 2, 3);
         truncatedCube.CalcFace(0, 1, 5, 4);
         
@@ -76,10 +118,28 @@ public class RotatedCubeHelper : MonoBehaviour
         spheres = new GameObject[10];
         for (int i = 0; i < spheres.Length; i++) {
             GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            sphere.transform.localScale = Vector3.one * 0.1f;
+            sphere.transform.localScale = Vector3.one * 0.05f;
             sphere.GetComponent<Renderer>().material.color = new Color(0, 0, 1);
             Destroy(sphere.GetComponent<SphereCollider>());
             spheres[i] = sphere;
+        }
+    }
+
+    private void HideSpheres() {
+        if(spheres == null){
+            return;
+        }
+        foreach (GameObject obj in spheres) {
+            obj.SetActive(false);
+        }
+    }
+
+    private void HideTriangles() {
+        if (triangles == null) {
+            return;
+        }
+        foreach (MeshFilter obj in triangles) {
+            obj.gameObject.SetActive(false);
         }
     }
 
@@ -114,7 +174,7 @@ public class RotatedCubeHelper : MonoBehaviour
         }
     }
 
-    private Vector3[] getTrianglesVertices(Transform mesh, Vector3[] face)
+    private Vector3[] GetTrianglesVertices(Transform mesh, Vector3[] face)
     {
         int[] order = new int[] { 0, 1, 2, 2, 1, 0 };
         Vector3[] vertices = new Vector3[order.Length];
@@ -130,7 +190,7 @@ public class RotatedCubeHelper : MonoBehaviour
         }
         List<Vector3[]> faces = truncatedCube.GetTriangles();
         for(int i = 0; i < faces.Count; i++) {
-            triangles[i].mesh.vertices = getTrianglesVertices(triangles[i].transform, faces[i]);
+            triangles[i].mesh.vertices = GetTrianglesVertices(triangles[i].transform, faces[i]);
             triangles[i].mesh.triangles = new int[] { 0, 1, 2, 3, 4, 5 };
             triangles[i].gameObject.SetActive(true);
         }
