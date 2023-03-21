@@ -6,18 +6,16 @@ using UnityEngine;
 public class PhysicsHelper : MonoBehaviour
 {
     private Rigidbody rb;
-    private float drag;
-    private Vector3 velocity;
     private float mass;
 
 
     public float Drag
     {
-        get { return this.drag;  }
+        get; private set;
     }
     public Vector3 Velocity
     {
-        get { return this.velocity; }
+        get; private set;
     }
     public float Mass
     {
@@ -29,8 +27,8 @@ public class PhysicsHelper : MonoBehaviour
     }
 
     private void UpdateValues() {
-        this.drag = this.rb.drag;
-        this.velocity = this.rb.velocity;
+        this.Drag = this.rb.drag;
+        this.Velocity = this.rb.velocity;
         this.mass = this.rb.mass;
     }
 

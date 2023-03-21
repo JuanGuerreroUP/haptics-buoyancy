@@ -4,36 +4,41 @@ using UnityEngine;
 
 public class TransformHelper : MonoBehaviour
 {
-    private Vector3 scale;
-    private Vector3 position;
-    private Quaternion rotation;
-
+    private Vector3 previousPosition;
     public Vector3 Scale
     {
-        get { return this.scale; }
+        get; private set;
     }
     public Vector3 Position
     {
-        get { return this.position; }
+        get; private set;
     }
     public Quaternion Rotation
     {
-        get { return this.rotation; }
+        get; private set;
+    }
+
+    public Vector3 Velocity
+    {
+        get; private set;
     }
 
     private void UpdateTransform()
     {
-        this.position = transform.position;
-        this.rotation = transform.rotation;
-        this.scale = transform.lossyScale;
+        this.Position = transform.position;
+        this.Rotation = transform.rotation;
+        this.Scale = transform.lossyScale;
     }
     void Awake()
     {
         this.UpdateTransform();
+        this.Velocity = Vector3.zero;
     }
 
     void Update()
     {
+        this.Velocity = (transform.position - this.Position) / Time.deltaTime;
         this.UpdateTransform();
+
     }
 }

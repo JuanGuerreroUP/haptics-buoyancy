@@ -106,6 +106,7 @@ public class HM_SM : MonoBehaviour
                 if (floatingObject != null)
                 {
                     HapticPluginImport.SetHapticsForce(myHapticPlugin, i, floatingObject.GetNetForce()*k);
+                    ApplyDampingFactors(i);
                 }
                 /*if (button0[i] && myHIP[i].ObjectIsGrabbed())
                 {
@@ -253,8 +254,11 @@ public class HM_SM : MonoBehaviour
         Vector3 direction = desiredPosition - position[hapDevNum];
         Vector3 forceField = myHIP[hapDevNum].Kp * direction;
         HapticPluginImport.SetHapticsForce(myHapticPlugin, hapDevNum, forceField);
+        ApplyDampingFactors(hapDevNum);
 
-        // compute linear damping force
+    }
+
+    private void ApplyDampingFactors(int hapDevNum){
         Vector3 linearVelocity = HapticPluginImport.GetHapticsLinearVelocity(myHapticPlugin, hapDevNum);
         Vector3 forceDamping = -myHIP[hapDevNum].Kv * linearVelocity;
         // sent force to haptic device
