@@ -12,16 +12,18 @@ public abstract class AbstractFloatingObject : MonoBehaviour, ILiquidReactive
     private PhysicsHelper rb;
     private Liquid fluid;
     protected TransformHelper transformHelper;
-    private ForceViewer forceViewer;
+
+    private readonly BuoyantState state = new BuoyantState();
+    public BuoyantState State { get => this.state; }
 
     public abstract float GetObjVolume();
     public abstract float GetDisplacedVolume();
+    protected abstract float GetDragArea();
 
     public void Awake()
     {
         this.rb = GetComponent<PhysicsHelper>();
         this.transformHelper = GetComponent<TransformHelper>();
-        this.forceViewer = FindObjectOfType<ForceViewer>();
         this.OnAwake();
     }
     public void Start()
@@ -31,12 +33,21 @@ public abstract class AbstractFloatingObject : MonoBehaviour, ILiquidReactive
 
     protected virtual void OnAwake() { }
 
+    private static Vector3 RoundVector(Vector3 value, float precision){
+        value *= precision;
+        for(int i = 0; i < 3; i++){
+            value[i] = Mathf.Round(value[i]);
+            value[i] /= precision;
+        }
+        return value;
+    }
+
     public void FixedUpdate()
     {
-        HIP hip = this.transform.parent == null ? null : this.transform.parent.gameObject.GetComponent<HIP>();
+        HIP_SM hip = this.transform.parent == null ? null : this.transform.parent.gameObject.GetComponent<HIP_SM>();
         if (hip == null)
         {
-            Vector3 netForce = GetNetForce(this.forceViewer);
+            Vector3 netForce = GetNetForce();//RoundVector(, 1.0f);
             this.rb.GetRigidbody().AddForce(netForce);
         }
     }
@@ -70,48 +81,43 @@ public abstract class AbstractFloatingObject : MonoBehaviour, ILiquidReactive
         }
     }
 
-    [Obsolete]
-    public float GetDensity()
-    {
-        return rb.Mass / GetObjVolume();
-    }
-
-    public static Vector3 CalcForce(float volume, float density)
+    private static Vector3 CalcForce(float volume, float density)
     {
         return volume * density * -Physics.gravity;
     }
 
-    public Vector3 GetBuoyantForce()
+    private Vector3 GetBuoyantForce()
     {
-        return CalcForce(GetDisplacedVolume(), this.fluid?.density ?? 0);
+        this.state.DisplacedVolume = GetDisplacedVolume();
+        return CalcForce(this.state.DisplacedVolume, this.fluid?.density ?? 0);
     }
 
-    public Vector3 GetWeightForce()
+    private Vector3 GetWeightForce()
     {
         return CalcForce(GetObjVolume(), this.density);
     }
 
-    public Vector3 GetDragForce()
+    private Vector3 GetDragForce()
     {
-        float fluidDensity = this.fluid?.density ?? 0;//1.293f;
-        return 0.5f * fluidDensity * this.rb.Drag * this.rb.Velocity * this.rb.Velocity.magnitude;
+        float fluidDensity = 0f;
+        if (this.fluid != null){
+            fluidDensity = this.fluid.density;
+        }
+        Vector3 pV = fluidDensity * this.rb.Velocity.magnitude * this.rb.Velocity;
+        float area = this.GetDragArea();
+        Vector3 dragForce = this.rb.Drag * area * (pV/2.0f);
+        return dragForce;
     }
 
-    public Vector3 GetNetForce(ForceViewer forceViewer)
-    {
-        Vector3 buoyantForce = this.GetBuoyantForce();
-        Vector3 weight = this.GetWeightForce();
-        Vector3 dragForce = GetDragForce();
-        Vector3 netForce = buoyantForce - weight;
-        Debug.Log("NetF:" + netForce);
-        if (forceViewer != null)
-        {
-            forceViewer.SetForces(buoyantForce, weight, dragForce, netForce);
-        }
-        return netForce - dragForce;
-    }
     public Vector3 GetNetForce()
     {
-        return this.GetNetForce(null);
+        this.state.BouyantForce = this.GetBuoyantForce();
+        this.state.Weight = this.GetWeightForce();
+        this.state.DragForce = this.GetDragForce();
+        this.state.NetForce = this.state.BouyantForce - this.state.Weight;
+        if(this.state.DragForce.y < 0){
+            return this.state.NetForce;
+        }
+        return this.state.NetForce - this.state.DragForce;
     }
 }

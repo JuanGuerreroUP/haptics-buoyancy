@@ -102,7 +102,7 @@ public class HM_SM : MonoBehaviour
                 button2[i] = HapticPluginImport.GetHapticsButtons(myHapticPlugin, i, 3);
                 button3[i] = HapticPluginImport.GetHapticsButtons(myHapticPlugin, i, 4);
 
-                AbstractFloatingObject floatingObject = myHIP[i].getFloatingObject();
+                AbstractFloatingObject floatingObject = myHIP[i].GetFloatingObject();
                 if (floatingObject != null)
                 {
                     HapticPluginImport.SetHapticsForce(myHapticPlugin, i, floatingObject.GetNetForce()*k);

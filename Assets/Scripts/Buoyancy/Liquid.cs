@@ -22,7 +22,7 @@ public class Liquid : MonoBehaviour
         this.waterCollider.size = new Vector3(cornerFinder.GetWidth(), depth, cornerFinder.GetDepth()); 
     }
 
-    public float GetWaterLevel() {
+    private float GetWaterLevel() {
         return waterPlane.Position.y;
     }
     public float GetDepth(float y)

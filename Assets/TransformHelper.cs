@@ -25,7 +25,7 @@ public class TransformHelper : MonoBehaviour
     {
         this.position = transform.position;
         this.rotation = transform.rotation;
-        this.scale = transform.localScale;
+        this.scale = transform.lossyScale;
     }
     void Awake()
     {

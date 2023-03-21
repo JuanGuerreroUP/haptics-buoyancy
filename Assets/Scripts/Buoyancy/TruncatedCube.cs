@@ -158,18 +158,23 @@ public class TruncatedCube {
 
         return totalVolume;
     }
-
-    public float GetPrismVolume(float top) {
+    public float GetArea(){
         List<Vector3[]> triangles = new();
-        if (!GetNewFaceTriangles(triangles)){
+        if (!GetNewFaceTriangles(triangles))
+        {
             return 0f;
         }
-        float height = top - this.xzPlane;
-        float totalVolume = 0f;
-        foreach (Vector3[] triangle in triangles) {
-            totalVolume += GetTriangleArea(triangle);
+        float area = 0f;
+        foreach (Vector3[] triangle in triangles)
+        {
+            area += GetTriangleArea(triangle);
         }
-        return totalVolume * height;
+        return area;
+    }
+
+    public float GetPrismVolume(float top) {
+        float height = top - this.xzPlane;
+        return GetArea() * height;
     }
 
     private float GetTetrahedronVolume(Vector3 intersectionPoint, Vector3[] triangle, Vector3 normal)

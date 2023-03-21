@@ -21,7 +21,7 @@ public class FloatingCube : AbstractFloatingObject {
     public override void SetWater(Liquid water)
     {
         base.SetWater(water);
-        this.rotatedCubeHelper.waterLevel = water.GetWaterLevel();
+        this.rotatedCubeHelper.waterLevel = water.GetDepth(0);
     }
 
     public override float GetDisplacedVolume()
@@ -31,5 +31,9 @@ public class FloatingCube : AbstractFloatingObject {
             return this.transformHelper.Scale.x * this.transformHelper.Scale.z * GetH();
         }
         return this.rotatedCubeHelper.GetVolume();
+    }
+
+    protected override float GetDragArea(){
+        return 1.0f;//this.rotatedCubeHelper.GetArea();
     }
 }

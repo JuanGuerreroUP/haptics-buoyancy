@@ -22,9 +22,13 @@ public class FloatingSphere : AbstractFloatingObject
         return ((Mathf.PI * Mathf.Pow(h, 2)) / 3) * ((3 * r) - h);
     }
 
+    private float GetCircleArea(float r) {
+        return Mathf.PI * Mathf.Pow(r, 2);
+    }
+
     private float GetCylinderVolume(float r, float h)
     {
-        return Mathf.PI * Mathf.Pow(r, 2) * h;
+        return GetCircleArea(r) * h;
     }
 
     override public float GetObjVolume()
@@ -32,5 +36,10 @@ public class FloatingSphere : AbstractFloatingObject
         float d = this.transformHelper.Scale.x;
         float r = d / 2;
         return GetSphereVolume(r, d);
+    }
+
+    protected override float GetDragArea()
+    {
+        return GetCircleArea(this.transformHelper.Scale.x / 2);
     }
 }

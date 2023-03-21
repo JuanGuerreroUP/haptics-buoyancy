@@ -49,7 +49,6 @@ public class RotatedCubeHelper : MonoBehaviour
             Plot(null);
             return;
         }
-
         TruncatedCube truncatedCube;
         if (this.waterLevel < this.transform.position.y) {
             truncatedCube = GetUnderwaterMesh(this.waterLevel);
@@ -61,6 +60,11 @@ public class RotatedCubeHelper : MonoBehaviour
         }
         Debug.Log("Volume: " + this.volume);
         Plot(truncatedCube);
+    }
+
+    public float GetArea(){
+        TruncatedCube truncatedCube = GetUnderwaterMesh(this.transform.position.y);
+        return truncatedCube.GetArea();
     }
 
     private void Plot(TruncatedCube truncatedCube){

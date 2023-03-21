@@ -8,8 +8,11 @@ public class HIP_SM : MonoBehaviour
     public GameObject hapticManager;
     public GameObject IHIP;
 
+    public ForceViewer forceViewer;
+
     // get haptic device information from the haptic manager
     private HM_SM myHapticManager;
+
 
     // haptic device number
     private int hapticDevice;
@@ -109,7 +112,6 @@ public class HIP_SM : MonoBehaviour
                 //Debug.Log("Clean " + manipObj.gameObject.name + "'s parent");
                 manipObj.transform.parent = prevParent;
                 manipObj.GetComponent<Rigidbody>().isKinematic = false;
-                manipObj.GetComponent<Rigidbody>().useGravity = true;
                 //Reset Manipulated Object
                 manipObj = null;
                 //Reset prevParent
@@ -179,15 +181,17 @@ public class HIP_SM : MonoBehaviour
         {
             // calculate the collision point
             objectCollidingPosition = position + (collision.contacts[0].normal * Mathf.Abs(collision.contacts[0].separation));
-
+            if(collision.rigidbody!= null){
+                objectMass = collision.rigidbody.mass;
+            }
             // obtain colliding object mass
-            objectMass = collision.rigidbody.mass;
+            
         }
     }
 
     void OnCollisionStay(Collision collision)
     {
-        var constraints = collision.rigidbody.constraints;
+        RigidbodyConstraints constraints = collision.rigidbody != null ? collision.rigidbody.constraints : RigidbodyConstraints.None;
 
         // update IHIP position according to colliding position
         if (Mathf.Abs(collision.contacts[0].separation) > radius)
@@ -206,13 +210,13 @@ public class HIP_SM : MonoBehaviour
                 grabbedObject = collision.transform.GetComponent<AbstractFloatingObject>();
                 if(grabbedObject != null)
                 {
+                    this.forceViewer.SetWatchingObject(grabbedObject);
                     isGrabbed = true;
                     isInteracting = true;
 
                     manipObj = collision.gameObject;
                     prevParent = collision.transform.parent;
                     collision.transform.parent = transform;
-                    collision.rigidbody.useGravity = false;
                     collision.rigidbody.isKinematic = true;
                 }
             }
@@ -223,7 +227,11 @@ public class HIP_SM : MonoBehaviour
             objectCollidingPosition = position + (collision.contacts[0].normal * Mathf.Abs(collision.contacts[0].separation));
 
             // obtain colliding object mass
-            objectMass = collision.rigidbody.mass;
+            if (collision.rigidbody != null)
+            {
+                objectMass = collision.rigidbody.mass;
+            }
+            
         }
     }
 
@@ -248,7 +256,7 @@ public class HIP_SM : MonoBehaviour
         return isGrabbed;
     }
 
-    public AbstractFloatingObject getFloatingObject()
+    public AbstractFloatingObject GetFloatingObject()
     {
         return this.grabbedObject;
     }
